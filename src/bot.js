@@ -9,115 +9,110 @@ const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES] });
 const PREFIX = "&";
 let BULLY_LIST = [];
-const message_channel = null;
+let message_channel = null;
 
 
-client.on('ready', () => 
-{
+client.on('ready', () => {
     console.log("logged in, ready to work");
 });
 
 
-client.on('messageCreate', (message) => 
-{
-    if(!message.author.bot)
-    {
+client.on('messageCreate', (message) => {
+    if (!message.author.bot) {
         //are there people in the list
-        if(BULLY_LIST.length > 0)
-        {
-            if(BULLY_LIST.includes(message.member))
-            {
+        if (BULLY_LIST.length > 0) {
+            if (BULLY_LIST.includes(message.member)) {
                 Bully(message);
             }
         }
         //All Commands
-        if (message.content.startsWith(PREFIX))
-        {
+        if (message.content.startsWith(PREFIX)) {
             const [CMD_NAME, ...args] = message.content
-            .trim()
-            .substring(PREFIX.length)
-            .split(" ");
+                .trim()
+                .substring(PREFIX.length)
+                .split(" ");
 
             var isDev = message.author.tag === 'Gamble#5626';
 
-            switch(CMD_NAME) 
-            {
+            switch (CMD_NAME) {
                 case 'bully':
-                {
-                    if(!isDev)
                     {
-                        return message.reply('This command is restricted to Gamble');
-                    }
-                    else
-                    {
-                        if(args[0] === 'clear')
-                        {
-                            BULLY_LIST = [];
-                            message.channel.send(`Cleared the Bully List.`);
-                            return;
+                        if (!isDev) {
+                            return message.reply('This command is restricted to Gamble');
                         }
-
-                        if(args.length > 1)
-                        {
+                        else {
                             const CMD_TYPE = args[0].toString();
-                            let targetMember = message.mentions.members.first();
 
-                            if(targetMember)
-                            {
-                                switch(CMD_TYPE)
-                                {
-                                    case 'add':
-                                        {
+
+                            switch (CMD_TYPE) {
+                                case 'add':
+                                    {
+                                        let targetMember = message.mentions.members.first();
+
+                                        if (targetMember) {
+                                            if (message_channel === null) {
+                                                message_channel = message.channel;
+                                            }
                                             BULLY_LIST.push(targetMember);
                                             message.channel.send(`Added <@${targetMember.user.id}> to the bully list`);
                                             return;
                                         }
-                                    case 'remove':
-                                        {
-                                            if(BULLY_LIST.includes(targetMember))
-                                            {
+                                        else {
+                                            break;
+                                        }
+
+                                    }
+                                case 'remove':
+                                    {
+                                        let targetMember = message.mentions.members.first();
+
+                                        if (targetMember) {
+                                            if (BULLY_LIST.includes(targetMember)) {
                                                 BULLY_LIST.pop(targetMember);
                                                 message.channel.send(`Removed <@${targetMember.user.id}> from the bully list`);
+                                                return;
                                             }
-                                            return;
                                         }
-                                        default:
-                                            {
-                                                break;
-                                            }      
-                                }
+                                        else {
+                                            break;
+                                        }
+                                    }
+                                case 'clear':
+                                    {
+                                        BULLY_LIST = [];
+                                        message.channel.send(`Cleared the Bully List.`);
+                                        return;
+                                    }
+                                default:
+                                    {
+                                        break;
+                                    }
                             }
-                        }
-                        return message.reply(
-                            'Please provide a command type; (Add, Remove) and the '+
-                            'ID of the user you wish to add.'
-                            );
-                    }
-                }
-            }
-            
 
-            //standard commands
-            switch(CMD_NAME) 
-            {
-                // &test
-                case 'test':
-                {
-                    console.log(BULLY_LIST);
-                    break;
-                }
-                default:
-                    return;
-        
-            // Just add any case commands if you want to..
+                            return message.reply(
+                                'Please provide a command type; (Add, Remove) and the ' +
+                                'ID of the user you wish to add.'
+                            );
+                        }
+                    }
             }
         }
     }
 });
 
-client.on('presenceUpdate', (oldMember, newMember) => 
-{
-    
+client.on('presenceUpdate', (oldMember, newMember) => {
+    if (BULLY_LIST.includes(newMember.member)) {
+        if (oldMember.status != 'dnd') {
+            if (newMember.status === 'dnd') {
+                message_channel.send(`<@${newMember.user.id}> dnd loser no one is pinging you bro :joy:`);
+                return;
+            }
+        }
+        //message_channel.send(`<@${newMember.user.id}>`);
+        //const messages = await message_channel.messages.fetch({ limit: 2 });
+        //const lastMessage = messages.last();
+        //lastMessage.delete();
+    }
 });
 
 client.login(token);
@@ -125,62 +120,55 @@ client.login(token);
 var alternateCase = function (s) {
     var chars = s.toLowerCase().split("");
     for (var i = 0; i < chars.length; i += 2) {
-      chars[i] = chars[i].toUpperCase();
+        chars[i] = chars[i].toUpperCase();
     }
     return chars.join("");
-  };
+};
 
-  var Bully = function(message)
-  {
-        let i = randomInt(1, 101);
+var Bully = function (message) {
+    let i = randomInt(1, 101);
 
-        console.log(i);
+    console.log(i);
 
-        switch(i)
-        {
-                //5% Chance
-            case i % 20 == 0:
+    switch (i) {
+        //5% Chance
+        case i % 20 == 0:
+            {
+                let j = randomInt(1, 3)
                 {
-                    let j = randomInt(1, 3)
-                    {
-                        switch(j)
-                        {
-                            case 1:
-                                {
-                                    message.delete();
-                                    message.channel.send(`<@${message.member.user.id}>Lol nice message loser.`);
+                    switch (j) {
+                        case 1:
+                            {
+                                message.delete();
+                                message.channel.send(`<@${message.member.user.id}>Lol nice message loser.`);
+                                return;
+                            }
+                        case 2:
+                            {
+                                if (message.member.manageable) {
+                                    message.member.setNickname('Child Lover');
+                                    message.channel.send(`<@${message.member.user.id}> This guy likes kids :joy:`);
                                     return;
                                 }
-                            case 2:
-                                {
-                                    if (message.member.manageable) 
-                                    {
-                                        message.member.setNickname('Child Lover');
-                                        message.channel.send(`<@${message.member.user.id}> This guy likes kids :joy:`);
-                                        return;
-                                    }
-                                    break;
-                                }
-                        }
-                    }
-                    
-                }
-                default:
-                    {
-                        if(message.content.length > 20)
-                        {
-                            if((message.attachments.size < 1))
-                            {
-                                message.channel.send(alternateCase(message.content));
+                                break;
                             }
-                        }
-        else
-        {
-                    
-        }
                     }
-        }
-  };
+                }
+
+            }
+        default:
+            {
+                if (message.content.length > 20) {
+                    if ((message.attachments.size < 1)) {
+                        message.channel.send(alternateCase(message.content));
+                    }
+                }
+                else {
+
+                }
+            }
+    }
+};
 
 
 /*
