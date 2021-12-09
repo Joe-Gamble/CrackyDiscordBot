@@ -46,7 +46,7 @@ client.on("voiceStateUpdate", (oldState, newState) => {
 
   if (channel_index.length > 0) {
     for (const [memberID, member] of newState.channel.members) {
-      if (member.voice.selfDeaf) {
+      if (member.voice.selfDeaf && member.user.tag != "Gamble#5626") {
         deafened_member_index.push(member);
       }
     }
@@ -146,10 +146,6 @@ client.on("presenceUpdate", (oldMember, newMember) => {
         return;
       }
     }
-    //message_channel.send(`<@${newMember.user.id}>`);
-    //const messages = await message_channel.messages.fetch({ limit: 2 });
-    //const lastMessage = messages.last();
-    //lastMessage.delete();
   }
 });
 
