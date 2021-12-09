@@ -17,9 +17,7 @@ const client = new Client({
 });
 const PREFIX = "&";
 let BULLY_LIST = [];
-let DEAFENED_LIST = [];
 let message_channel = null;
-let voice_channels = [];
 
 client.on("ready", () => {
   console.log("logged in, ready to work");
@@ -32,13 +30,6 @@ client.on("voiceStateUpdate", (oldState, newState) => {
 
   var channel_index = [];
   var deafened_member_index = [];
-
-  if (
-    !newState.member.selfDeaf &&
-    deafened_member_index.includes(newState.member)
-  ) {
-    deafened_member_index.pop(newState.member);
-  }
 
   for (const [channelID, channel] of open_channels) {
     channel_index.push(channel);
@@ -65,6 +56,7 @@ client.on("messageCreate", (message) => {
     if (BULLY_LIST.length > 0) {
       if (BULLY_LIST.includes(message.member)) {
         Bully(message);
+        message.member.voice.setChannel(784754394339999815);
       }
     }
     //All Commands
