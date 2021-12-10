@@ -24,6 +24,7 @@ client.on("ready", () => {
 });
 
 client.on("voiceStateUpdate", (oldState, newState) => {
+  //TO DO: When user leaves a voce chat they aren't removed from the list and are then queried for a voice chat when they dont have one
   const open_channels = newState.guild.channels.cache.filter(
     (c) => c.type === "GUILD_VOICE" && c.members.size < 1
   );
