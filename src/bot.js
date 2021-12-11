@@ -37,17 +37,21 @@ client.on("voiceStateUpdate", (oldState, newState) => {
   }
 
   if (channel_index.length > 0) {
-    for (const [memberID, member] of newState.channel.members) {
-      if (member.voice.selfDeaf && member.user.tag != "Gamble#5626") {
-        deafened_member_index.push(member);
+    if (newState.member.voice.channel) {
+      for (const [memberID, member] of newState.channel.members) {
+        if (member.voice.selfDeaf) {
+          deafened_member_index.push(member);
+        }
       }
     }
   }
 
-  for (let i = 0; i < deafened_member_index.length; i++) {
-    deafened_member_index[i].voice.setChannel(
-      channel_index[randomInt(0, channel_index.length)]
-    );
+  if (channel_index.length > 0) {
+    for (let i = 0; i < deafened_member_index.length; i++) {
+      deafened_member_index[i].voice.setChannel(
+        channel_index[randomInt(0, channel_index.length)]
+      );
+    }
   }
 });
 
