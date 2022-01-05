@@ -16,7 +16,7 @@ const client = new Client({
   ],
 });
 const PREFIX = "&";
-let BULLY_LIST = [];
+let USER_LIST = [];
 let message_channel = null;
 
 client.on("ready", () => {
@@ -58,9 +58,9 @@ client.on("voiceStateUpdate", (oldState, newState) => {
 client.on("messageCreate", (message) => {
   if (!message.author.bot) {
     //are there people in the list
-    if (BULLY_LIST.length > 0) {
-      if (BULLY_LIST.includes(message.member)) {
-        Bully(message);
+    if (USER_LIST.length > 0) {
+      if (USER_LIST.includes(message.member)) {
+        RespondTo(message);
         message.member.voice.setChannel(784754394339999815);
       }
     }
@@ -74,7 +74,7 @@ client.on("messageCreate", (message) => {
       var isDev = message.author.tag === "Gamble#5626";
 
       switch (CMD_NAME) {
-        case "bully": {
+        case "cracky": {
           if (!isDev) {
             return message.reply("This command is restricted to Gamble");
           } else {
@@ -88,9 +88,9 @@ client.on("messageCreate", (message) => {
                   if (message_channel === null) {
                     message_channel = message.channel;
                   }
-                  BULLY_LIST.push(targetMember);
+                  USER_LIST.push(targetMember);
                   message.channel.send(
-                    `Added <@${targetMember.user.id}> to the bully list`
+                    `Added <@${targetMember.user.id}> to cracky's list.`
                   );
                   return;
                 } else {
@@ -101,10 +101,10 @@ client.on("messageCreate", (message) => {
                 let targetMember = message.mentions.members.first();
 
                 if (targetMember) {
-                  if (BULLY_LIST.includes(targetMember)) {
-                    BULLY_LIST.pop(targetMember);
+                  if (USER_LIST.includes(targetMember)) {
+                    USER_LIST.pop(targetMember);
                     message.channel.send(
-                      `Removed <@${targetMember.user.id}> from the bully list`
+                      `Removed <@${targetMember.user.id}> from cracky's list`
                     );
                     return;
                   }
@@ -113,8 +113,8 @@ client.on("messageCreate", (message) => {
                 }
               }
               case "clear": {
-                BULLY_LIST = [];
-                message.channel.send(`Cleared the Bully List.`);
+                USER_LIST = [];
+                message.channel.send(`Cleared cracky's list.`);
                 return;
               }
               default: {
@@ -134,11 +134,11 @@ client.on("messageCreate", (message) => {
 });
 
 client.on("presenceUpdate", (oldMember, newMember) => {
-  if (BULLY_LIST.includes(newMember.member)) {
+  if (USER_LIST.includes(newMember.member)) {
     if (oldMember.status != "dnd") {
       if (newMember.status === "dnd") {
         message_channel.send(
-          `<@${newMember.user.id}> dnd loser no one is pinging you bro :joy:`
+          `<@${newMember.user.id}> Imagine being on dnd :joy:`
         );
         return;
       }
@@ -156,7 +156,7 @@ var alternateCase = function (s) {
   return chars.join("");
 };
 
-var Bully = function (message) {
+var RespondTo = function (message) {
   let i = randomInt(1, 101);
 
   console.log(i);
@@ -170,15 +170,15 @@ var Bully = function (message) {
           case 1: {
             message.delete();
             message.channel.send(
-              `<@${message.member.user.id}>Lol nice message loser.`
+              `<@${message.member.user.id}>Nice message LOL.`
             );
             return;
           }
           case 2: {
             if (message.member.manageable) {
-              message.member.setNickname("Child Lover");
+              message.member.setNickname("Fortnite Enjoyer");
               message.channel.send(
-                `<@${message.member.user.id}> This guy likes kids :joy:`
+                `<@${message.member.user.id}> This guy likes Fortnite :joy:`
               );
               return;
             }
